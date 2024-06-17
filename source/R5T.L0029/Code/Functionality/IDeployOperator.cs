@@ -25,14 +25,14 @@ namespace R5T.L0029
             IEnumerable<Func<RemoteDeployContext, SshClient, Task>> postDeployActions,
             ILogger logger)
         {
-            FileSystemOperator.Instance.EnsureDirectoryExists(remoteDeployContext.SourceLocalBinariesDirectoryPath);
+            Instances.FileSystemOperator.Ensure_DirectoryExists(remoteDeployContext.SourceLocalBinariesDirectoryPath);
 
             // Archive locally.
-            var localArchiveFilePath = F0002.PathOperator.Instance.GetFilePath(
+            var localArchiveFilePath = Instances.PathOperator.Get_FilePath(
                 remoteDeployContext.LocalTemporaryDirectoryPath,
                 remoteDeployContext.ArchiveFileName);
 
-            FileSystemOperator.Instance.DeleteFile_OkIfNotExists(localArchiveFilePath);
+            Instances.FileSystemOperator.Delete_File_OkIfNotExists(localArchiveFilePath);
 
             logger.LogInformation($"Archiving to local file...\n\t{localArchiveFilePath}");
 
@@ -43,7 +43,7 @@ namespace R5T.L0029
             logger.LogInformation($"Archived to local file.\n\t{localArchiveFilePath}");
 
             // SFTP archive to remote.
-            var remoteArchiveFilePath = F0002.PathOperator.Instance.GetFilePath(
+            var remoteArchiveFilePath = Instances.PathOperator.Get_FilePath(
                 remoteDeployContext.RemoteTemporaryDirectoryPath,
                 remoteDeployContext.ArchiveFileName);
 
@@ -58,7 +58,7 @@ namespace R5T.L0029
                         connection,
                         sftpClient =>
                         {
-                            using var fileStream = FileStreamOperator.Instance.OpenRead(localArchiveFilePath);
+                            using var fileStream = Instances.FileStreamOperator.Open_Read(localArchiveFilePath);
                                 
                             sftpClient.UploadFile(fileStream, remoteArchiveFilePath, true);
                         });
