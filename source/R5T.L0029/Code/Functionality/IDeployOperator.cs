@@ -47,14 +47,14 @@ namespace R5T.L0029
                 remoteDeployContext.RemoteTemporaryDirectoryPath,
                 remoteDeployContext.ArchiveFileName);
 
-            await SshOperator.Instance.InConnectionContext(
+            await Instances.SshOperator.InConnectionContext(
                 remoteServerAuthentication,
                 async connection =>
                 {
                     // Upload the file.
                     logger.LogInformation($"Uploading archive file to remote server...\n\t{remoteArchiveFilePath}");
 
-                    SftpOperator.Instance.InSftpContext_Connected_Synchronous(
+                    Instances.SftpOperator.InSftpContext_Connected_Synchronous(
                         connection,
                         sftpClient =>
                         {
@@ -65,7 +65,7 @@ namespace R5T.L0029
 
                     logger.LogInformation($"Uploaded archive file to remote server.\n\t{remoteArchiveFilePath}");
 
-                    await SshOperator.Instance.InSshContext_Connected(
+                    await Instances.SshOperator.InSshContext_Connected(
                         connection,
                         async sshClient =>
                         {
